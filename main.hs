@@ -11,9 +11,6 @@ data Operation = Subtraction | Addition | Division | Multiplication
 data BinaryTree a = Branch Operation (BinaryTree a) (BinaryTree a) | Leaf a
   deriving (Show)
 
-remove_spaces :: String -> String
-remove_spaces = filter (/= ' ')
-
 char_to_int :: Char -> Maybe Int
 char_to_int c = ord c - ord '0' <$ guard (c `elem` ['0'..'9'])
 
@@ -75,7 +72,7 @@ main =
   putStrLn "Enter your calculation to compute:" >>
   getLine >>= \input ->
   let
-    clean_input = remove_spaces input
+    clean_input = filter (/= ' ') input
     parsed_input = parse_string clean_input
     binary_tree = to_binary_tree $ fromJust parsed_input
   in print $ calculate binary_tree
