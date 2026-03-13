@@ -22,7 +22,10 @@ main = do
   print $ calculate binaryTree
 
 charToInt :: Char -> Maybe Int
-charToInt c = ord c - ord '0' <$ guard (c `elem` ['0'..'9'])
+charToInt c = ord c - ord '0' <$ guard (isInteger c)
+
+isInteger :: Char -> Bool
+isInteger = (`elem` ['0'..'9'])
 
 mapAndTakeWhile :: (a -> b) -> (b -> Bool) -> [a] -> [b]
 mapAndTakeWhile _ _ [] = []
@@ -38,12 +41,27 @@ mapAndDropWhile mapFunc condition (x:xs)
   | otherwise         = x:xs
   where transX = mapFunc x
 
-getNumber :: String -> Maybe (Integer, String)
-getNumber str = (left, right) <$ guard (not . null $ list)
+readInteger :: String -> Maybe Integer
+readInteger str = list >>= \x -> pure $ conversion x
   where
-    list = map fromJust . mapAndTakeWhile charToInt isJust $ str
-    left = toInteger $ foldl (\acc x -> x + acc * 10) 0 list
-    right = mapAndDropWhile charToInt isJust str
+    conversion x = toInteger $ foldl (\acc x -> x + acc * 10) 0 x
+    list = map fromJust maybeList <$ guard (Nothing `notElem` maybeList)
+    maybeList = map charToInt str
+
+takeInteger :: String -> Maybe (Integer, String)
+takeInteger str = integer >>= \left -> (left, right) <$ guard (list /= [])
+  where
+    list = takeWhile isInteger str
+    integer = readInteger list
+    right = dropWhile isInteger str
+
+-- readFloat :: String -> Maybe (Float, String)
+-- readFloat str = (left, right) <$ guard (not . null $ numberStr)
+--   where
+--     numberStr = takeWhile (\c -> isInteger c || c == '.') str
+--     integer = fst <$> takeInteger numberStr
+--     right = dropWhile 
+--     isNumber = 
 
 getOperation :: Char -> Maybe Operation
 getOperation '+' = Just Addition
@@ -58,7 +76,7 @@ parseString (c:cs)
   | Just operation <- getOperation c =
       parseString cs >>= \rest ->
       pure (Right operation : rest)
-  | Just number <- getNumber (c:cs)  =
+  | Just number <- takeInteger (c:cs)  =
       parseString (snd number) >>= \rest ->
       pure (Left (fst number) : rest)
   | otherwise = Nothing
