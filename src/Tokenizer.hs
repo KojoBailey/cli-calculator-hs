@@ -21,24 +21,26 @@ data Token
   | TEOF
   deriving (Show, Eq)
 
+
 -- Throws on failure.
 -- Consider result types down the line.
-tokenize :: String -> [Token]
-tokenize [] = [TEOF]
-tokenize input =
+tokenize :: String -> Either String [Token]
+tokenize [] = Right [TEOF]
+tokenize (c:cs) =
   case c of
-    ' ' -> rest
-    '(' -> TParenOpen : rest
-    ')' -> TParenClose : rest
-    '+' -> TLowOp Add : rest
-    '-' -> TLowOp Subtract : rest
-    '*' -> THighOp Multiply : rest
-    '/' -> THighOp Divide : rest
-    _   | isDigit c -> let (num, remaining) = parseNum input in TNum num : tokenize remaining
-    _   -> error "Invalid token."
+    ' '           -> tokenize cs
+    '('           -> prependToken TParenOpen
+    ')'           -> prependToken TParenClose
+    '+'           -> prependToken $ TLowOp Add
+    '-'           -> prependToken $ TLowOp Subtract
+    '*'           -> prependToken $ THighOp Multiply
+    '/'           -> prependToken $ THighOp Divide
+    _ | isDigit c -> let (num, remaining) = parseNum (c:cs)
+                       in fmap (TNum num :) (tokenize remaining)
+    _             -> Left $ "Invalid token: " ++ [c]
   where
-    c = head input
-    rest = tokenize (tail input)
+    prependToken :: Token -> Either String [Token]
+    prependToken token = fmap (token :) (tokenize cs)
 
 -- Does not check for invalid input.
 parseNum :: String -> (Double, String)
