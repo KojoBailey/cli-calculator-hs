@@ -2,25 +2,24 @@ module Tokenizer (HighOp(..), LowOp(..), Token(..), tokenize) where
 
 import Data.Char ( isDigit )
 
-data HighOp
+data HighOp -- Higher presedence than LowOp
   = Multiply
   | Divide
   deriving (Show, Eq)
 
-data LowOp
+data LowOp -- Lower presedence than HighOp
   = Add
   | Subtract
   deriving (Show, Eq)
 
 data Token
-  = TNum Double
+  = TNum Double -- Easier to just evaluate one number type
   | TLowOp LowOp
   | THighOp HighOp
   | TParenOpen
   | TParenClose
-  | TEOF
+  | TEOF -- End of file
   deriving (Show, Eq)
-
 
 -- Throws on failure.
 -- Consider result types down the line.
