@@ -2,7 +2,10 @@ import Tokenizer
 
 main :: IO ()
 main = do
-  putStrLn "Enter your calculation to compute:"
   putStr ">>> "
   input <- getLine
-  print $ tokenize input
+  if input == "q"
+    then return ()
+    else do
+      print $ tokenize input
+      main
