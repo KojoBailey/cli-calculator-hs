@@ -6,7 +6,7 @@ This is a very simple command-line calculator that evaluates expressions, progra
 ## Usage
 By calling the `main` function:
 
-```
+```hs
 >>> 6 + 7
 13.0
 >>> 3 + 4 * 5
