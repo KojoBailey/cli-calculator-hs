@@ -57,4 +57,4 @@ Originally, this started as a project to aid my learning of Haskell university. 
 
 Now finished with the university module, I've become interesed in the implementation of tooling (compilers, interpreters) for programming languages, and figured that this would be the perfect place to start, vastly improving from my initial attempt.
 
-Unfortunately, Haskell can be quite cumbersome to program in, particularly because of how unscoped and annoying-to-use records/structs are, so I do not intend to expand the functionality of this particular application. However, I'm thinking of making a more advanced calculator tool in either OCaml or Rust. Plus, I'm confident I'll try developing a compiler for a custom programming language at some point, which would also likely be in Rust.
+Unfortunately, Haskell can be quite cumbersome to program in, particularly because of how unscoped and annoying-to-use records/structs are, so I do not intend to expand the functionality of this particular application. Instead, I've made a [similar project in OCaml](https://github.com/KojoBailey/cli-calculator-ocaml), and also want to take it even further in Rust someday.
